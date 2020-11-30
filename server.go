@@ -20,6 +20,21 @@ func main() {
 			r.URL.Path)
 	})
 
+	http.HandleFunc("/morninglist", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(
+			w,
+			"<h1>To-Do List</h1><body>"+
+				"<ul>"+
+				"<li>Wake Up</li>"+
+				"<li>Shower</li>"+
+				"<li>Brush Teeth</li>"+
+				"<li>Coffee</li>"+
+				"<li>Breakfast</li>"+
+				"</ul>"+
+				"</body>",
+		)
+	})
+
 	// Starts Go's default HTTP server and listens for connections on port 80.
 	// Once started, navigate to http:<IP>/ to see the webpage.
 	http.ListenAndServe(":80", nil)
