@@ -2,7 +2,8 @@ package main
 
 import (
 	"fmt"
-	"net/http"
+	"net/http" 	// The net/http package has all the utilities needed to accept
+				// requests and handle them dynamically
 )
 
 func main() {
