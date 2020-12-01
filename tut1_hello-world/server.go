@@ -20,6 +20,8 @@ func main() {
 			r.URL.Path)
 	})
 
+	// This is a simple test endpoint. Adding /morning list to the URL will serve
+	// up this html page instead.
 	http.HandleFunc("/morninglist", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(
 			w,
