@@ -114,11 +114,10 @@ func logout(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "Logged out! See ya!")
 }
 
-func isAuthenticated(w http.ResponseWriter, r *http.Request) bool {
-	session, _ := store.Get(r, "cookie-name")
-
+func isAuthenticated(w http.ResponseWriter, r *http.Request, session *sessions.Session) bool {
+	// session needs to be passed in from calling function here
 	user := getUser(session)
-	fmt.Fprintf(w, "Checking... %s", user.Username)
+	fmt.Fprintf(w, "Checking... %s...\n", user.Username)
 
 	// Check if the user is not authenticated
 	if auth := user.Authenticated; !auth {
@@ -129,11 +128,18 @@ func isAuthenticated(w http.ResponseWriter, r *http.Request) bool {
 }
 
 func secret(w http.ResponseWriter, r *http.Request) {
-	// only display if the user is authorized
-	if isAuthenticated(w, r) {
-		// Display secret
-		fmt.Fprintln(w, "You found the secret!")
+	session, _ := store.Get(r, "cookie-name")
+
+	user := getUser(session)
+	fmt.Fprintf(w, "Checking... %s...\n", user.Username)
+
+	// Check if the user is not authenticated
+	if auth := user.Authenticated; !auth {
+		http.Error(w, "Forbidden", http.StatusForbidden)
+		return
 	}
+	fmt.Fprintln(w, "You found the secret!")
+	return
 }
 
 func main() {
@@ -147,6 +153,7 @@ func main() {
 /* Example usage
 
 $ curl -s http://localhost/secret
+Checking... ...
 Forbidden
 
 $ curl -X POST -F 'username=wrong' -F 'password=creds' http://localhost/login
@@ -161,10 +168,13 @@ Content-Length: 23
 Content-Type: text/plain; charset=utf-8
 
 $ curl -s --cookie "cookie-name=MTYwNzk3NTkw..." http://localhost/secret
+Checking... user...
 You found the secret!
 
 $ curl -s http://localhost/logout
 Logged out! See ya!
 
-
+$ curl -s http://localhost/secret
+Checking... ...
+Forbidden
 */
