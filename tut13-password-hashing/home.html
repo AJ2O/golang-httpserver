@@ -1,0 +1,10 @@
+{{if .Fail}}
+    <h1>You entered the wrong password!</h1>
+{{else}}
+{{end}}
+<h1>Enter the correct passcode:</h1>
+<form method="POST">
+    <label>Passcode:</label><br />
+    <input type="password" name="password"><br />
+    <input type="submit">
+</form>
